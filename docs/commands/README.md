@@ -1,0 +1,28 @@
+# コマンドリファレンス
+
+`make docs` で cobra の定義から生成。手で編集しない。
+
+- [pitboard](pitboard.md)
+- [pitboard auth](pitboard_auth.md)
+- [pitboard auth login](pitboard_auth_login.md)
+- [pitboard auth logout](pitboard_auth_logout.md)
+- [pitboard auth status](pitboard_auth_status.md)
+- [pitboard comment](pitboard_comment.md)
+- [pitboard comment add](pitboard_comment_add.md)
+- [pitboard doctor](pitboard_doctor.md)
+- [pitboard skill](pitboard_skill.md)
+- [pitboard skill install](pitboard_skill_install.md)
+- [pitboard skill show](pitboard_skill_show.md)
+- [pitboard space](pitboard_space.md)
+- [pitboard space list](pitboard_space_list.md)
+- [pitboard space show](pitboard_space_show.md)
+- [pitboard space use](pitboard_space_use.md)
+- [pitboard task](pitboard_task.md)
+- [pitboard task archive](pitboard_task_archive.md)
+- [pitboard task assign](pitboard_task_assign.md)
+- [pitboard task create](pitboard_task_create.md)
+- [pitboard task list](pitboard_task_list.md)
+- [pitboard task move](pitboard_task_move.md)
+- [pitboard task point](pitboard_task_point.md)
+- [pitboard task show](pitboard_task_show.md)
+- [pitboard version](pitboard_version.md)

@@ -1,0 +1,19 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: gofmt -l . && test -z "$(gofmt -l .)"
+      - run: go vet ./...
+      - run: go test ./...
+      # docs/commands/ がコードと一致しているか（make docs の実行漏れを検出）
+      - run: go run ./cmd/gendocs docs/commands && git diff --exit-code docs/commands
