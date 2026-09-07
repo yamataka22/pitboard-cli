@@ -8,20 +8,31 @@ pitboard をターミナルと AI エージェント（Claude Code, Codex 等）
 
 ### macOS / Linux
 
-ターミナルで次を実行すると `/usr/local/bin` に入ります。
+環境に合うものをターミナルで実行すると `/usr/local/bin` に入ります。
+
+macOS（Apple Silicon）
 
 ```sh
 curl -fsSL https://github.com/yamataka22/pitboard-cli/releases/download/v0.1.1/pitboard_0.1.1_darwin_arm64.tar.gz | tar xz pitboard && sudo mv pitboard /usr/local/bin/
 ```
 
-URL のファイル名は環境に合わせて読み替えてください。
+macOS（Intel）
 
-| 環境 | ファイル |
-| --- | --- |
-| macOS（Apple Silicon） | `pitboard_0.1.1_darwin_arm64.tar.gz` |
-| macOS（Intel） | `pitboard_0.1.1_darwin_amd64.tar.gz` |
-| Linux（x86_64） | `pitboard_0.1.1_linux_amd64.tar.gz` |
-| Linux（arm64） | `pitboard_0.1.1_linux_arm64.tar.gz` |
+```sh
+curl -fsSL https://github.com/yamataka22/pitboard-cli/releases/download/v0.1.1/pitboard_0.1.1_darwin_amd64.tar.gz | tar xz pitboard && sudo mv pitboard /usr/local/bin/
+```
+
+Linux（x86_64）
+
+```sh
+curl -fsSL https://github.com/yamataka22/pitboard-cli/releases/download/v0.1.1/pitboard_0.1.1_linux_amd64.tar.gz | tar xz pitboard && sudo mv pitboard /usr/local/bin/
+```
+
+Linux（arm64）
+
+```sh
+curl -fsSL https://github.com/yamataka22/pitboard-cli/releases/download/v0.1.1/pitboard_0.1.1_linux_arm64.tar.gz | tar xz pitboard && sudo mv pitboard /usr/local/bin/
+```
 
 [Releases](https://github.com/yamataka22/pitboard-cli/releases) からブラウザでダウンロードした場合は、展開した `pitboard` を `/usr/local/bin` に置きます。macOS では「開発元を検証できません」と出るので、次を実行してください。
 
