@@ -1,5 +1,17 @@
 # 設定
 
+## macOS でブラウザからダウンロードしたとき
+
+README の `curl` の手順で入れたなら、この節は関係ありません。
+
+[Releases](https://github.com/yamataka22/pitboard-cli/releases) のページからブラウザで tar.gz を落とした場合、macOS がファイルに `com.apple.quarantine` を付けます。pitboard-cli は署名・公証をしていないので、そのまま実行すると「開発元を検証できません」と拒否されます。展開した `pitboard` を `/usr/local/bin` に置いたうえで、そのファイルの属性を外してください。
+
+```sh
+xattr -d com.apple.quarantine /usr/local/bin/pitboard
+```
+
+`pitboard version` が動けば完了です。`curl` でダウンロードしたファイルにはこの属性が付かないので、この操作は要りません。
+
 ## 設定ファイルと環境変数
 
 | 項目 | 環境変数（優先） | 設定ファイル |
