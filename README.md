@@ -6,12 +6,21 @@ pitboard をターミナルと AI エージェント（Claude Code, Codex 等）
 
 ## インストール
 
-```sh
-# Go が入っていれば
-go install github.com/yamataka22/pitboard-cli/cmd/pitboard@latest
+macOS / Linux は、次の3行を貼れば `/usr/local/bin/pitboard` に入ります（`sudo` のパスワードを聞かれます）。
 
-# それ以外は GitHub Releases から OS に合ったアーカイブを取り、pitboard を PATH の通った場所に置く
+```sh
+VERSION=$(curl -fsSL https://api.github.com/repos/yamataka22/pitboard-cli/releases/latest | sed -n 's/.*"tag_name": *"v\([^"]*\)".*/\1/p')
+OS=$([ "$(uname -s)" = Darwin ] && echo darwin || echo linux); ARCH=$([ "$(uname -m)" = x86_64 ] && echo amd64 || echo arm64)
+curl -fsSL "https://github.com/yamataka22/pitboard-cli/releases/download/v${VERSION}/pitboard_${VERSION}_${OS}_${ARCH}.tar.gz" | tar xz pitboard && sudo mv pitboard /usr/local/bin/
 ```
+
+`pitboard version` が動けば成功です。Go が入っているなら次でも入ります。
+
+```sh
+go install github.com/yamataka22/pitboard-cli/cmd/pitboard@latest
+```
+
+ブラウザからダウンロードする手順、置き場所（PATH）の説明、macOS で「開発元を検証できません」と出たときの対処は [インストール](docs/installation.md) を参照してください。
 
 ## セットアップ
 
@@ -52,6 +61,7 @@ AI には自然言語で頼みます。
 
 ## ドキュメント
 
+- [インストール](docs/installation.md): OS ごとの入れ方、置き場所（PATH）、macOS の警告への対処、更新と削除
 - [コマンドリファレンス](docs/commands/README.md): 全コマンドとオプション（`--help` と同じ内容）
 - [pitboard の語彙](docs/concepts.md): state、progress_changed_at、ポイント、kind の意味
 - [AI エージェントと使う](docs/ai.md): 頼み方、個人コマンド、cron からの定期実行、書き込みの安全装置

@@ -22,6 +22,7 @@ make docs        # docs/commands/ を cobra の定義から生成し直す
 
 - `README.md`: 入口。短く保つ
 - `docs/commands/`: コマンドリファレンス。`make docs` で生成するので手で編集しない。説明を変えるときは Go 側の `Short` / `Long` / フラグの説明文を直す
+- `docs/installation.md`: OS ごとのインストール手順。README には要点だけ置き、詳細はこちらに寄せる
 - `docs/concepts.md`: pitboard の語彙
 - `docs/ai.md`: AI エージェントとの使い方
 - `docs/configuration.md`: 設定、トークン、開発環境への向け方
