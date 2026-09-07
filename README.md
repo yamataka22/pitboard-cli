@@ -6,7 +6,7 @@ pitboard をターミナルと AI エージェント（Claude Code, Codex 等）
 
 ## インストール
 
-### macOS / Linux
+### macOS / Linux (WSL)
 
 環境に合うものをターミナルで実行すると `/usr/local/bin` に入ります。
 
@@ -22,7 +22,7 @@ macOS（Intel）
 curl -fsSL https://github.com/yamataka22/pitboard-cli/releases/download/v0.1.1/pitboard_0.1.1_darwin_amd64.tar.gz | tar xz pitboard && sudo mv pitboard /usr/local/bin/
 ```
 
-Linux（x86_64）
+Linux（x86_64） WSLの場合もこちら
 
 ```sh
 curl -fsSL https://github.com/yamataka22/pitboard-cli/releases/download/v0.1.1/pitboard_0.1.1_linux_amd64.tar.gz | tar xz pitboard && sudo mv pitboard /usr/local/bin/
@@ -58,7 +58,7 @@ WSL で Claude Code を使っている場合、WSL の中は Linux なので、W
 curl -fsSL https://github.com/yamataka22/pitboard-cli/releases/download/v0.1.1/pitboard_0.1.1_linux_amd64.tar.gz | tar xz pitboard && sudo mv pitboard /usr/local/bin/
 ```
 
-Windows で直接使うための zip も Releases に置いていますが、動作確認はしていません。
+なお、WSL ではなく Windows で直接使うための zip も Releases に置いていますが、動作確認はしていません。
 
 ## セットアップ
 
