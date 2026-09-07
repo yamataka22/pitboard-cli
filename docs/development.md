@@ -20,7 +20,7 @@ make docs        # docs/commands/ を cobra の定義から生成し直す
 
 ## ドキュメント
 
-- `README.md`: 入口。**インストールと最低限の使い方はここだけで完結させる**（迷って離脱されないため）。コマンドを1つずつ説明するのは docs 側
+- `README.md`: 入口。インストールと最低限の使い方はここで完結させる。コマンド1つずつの説明は `docs/commands/`
 - `docs/commands/`: コマンドリファレンス。`make docs` で生成するので手で編集しない。説明を変えるときは Go 側の `Short` / `Long` / フラグの説明文を直す
 - `docs/concepts.md`: pitboard の語彙
 - `docs/ai.md`: AI エージェントとの使い方
@@ -35,8 +35,11 @@ make docs        # docs/commands/ を cobra の定義から生成し直す
 make test
 goreleaser check                       # 設定と deprecation の確認
 goreleaser release --snapshot --clean  # 任意。dist/ に出るだけで push しない
-git tag -a v0.1.0 -m "v0.1.0" && git push origin v0.1.0
+sed -i 's/0\.1\.0/0.1.1/g' README.md   # インストール手順のファイル名を新しい版に
+git commit -am "v0.1.1" && git tag -a v0.1.1 -m "v0.1.1" && git push origin main v0.1.1
 ```
+
+README のインストール手順は Releases の実際のファイル名（`pitboard_0.1.0_darwin_arm64.tar.gz` など）を書いているので、タグを打つ前に版を更新してコミットしておく。
 
 タグと Release の消し直しは事故りやすいので、失敗したらパッチバージョンを上げて出し直します。
 
