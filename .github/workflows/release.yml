@@ -17,6 +17,10 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      # README のインストール手順は実際のファイル名（pitboard_0.1.1_darwin_arm64.tar.gz など）を
+      # 書いているので、この版に更新されていなければリリースしない（make release が更新する）
+      - name: Check README refers to this version
+        run: grep -q "pitboard_${GITHUB_REF_NAME#v}_" README.md
       - uses: goreleaser/goreleaser-action@v6
         with:
           version: "~> v2"

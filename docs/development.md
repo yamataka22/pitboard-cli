@@ -32,14 +32,11 @@ make docs        # docs/commands/ を cobra の定義から生成し直す
 `v*` タグを push すると GitHub Actions の goreleaser が各 OS 向けのバイナリを GitHub Releases に出します。
 
 ```sh
-make test
-goreleaser check                       # 設定と deprecation の確認
 goreleaser release --snapshot --clean  # 任意。dist/ に出るだけで push しない
-sed -i 's/0\.1\.0/0.1.1/g' README.md   # インストール手順のファイル名を新しい版に
-git commit -am "v0.1.1" && git tag -a v0.1.1 -m "v0.1.1" && git push origin main v0.1.1
+make release VERSION=0.1.1
 ```
 
-README のインストール手順は Releases の実際のファイル名（`pitboard_0.1.0_darwin_arm64.tar.gz` など）を書いているので、タグを打つ前に版を更新してコミットしておく。
+`make release` は test と `goreleaser check` を通したあと、README のインストール手順にあるファイル名の版を更新してコミットし、タグを打って push します。README は Releases の実際のファイル名（`pitboard_0.1.1_darwin_arm64.tar.gz` など）を書いているためで、版が合っていなければ release ワークフローの側でも止まります。
 
 タグと Release の消し直しは事故りやすいので、失敗したらパッチバージョンを上げて出し直します。
 

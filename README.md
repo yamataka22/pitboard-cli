@@ -11,17 +11,17 @@ pitboard をターミナルと AI エージェント（Claude Code, Codex 等）
 ターミナルで次を実行すると `/usr/local/bin` に入ります。
 
 ```sh
-curl -fsSL https://github.com/yamataka22/pitboard-cli/releases/download/v0.1.0/pitboard_0.1.0_darwin_arm64.tar.gz | tar xz pitboard && sudo mv pitboard /usr/local/bin/
+curl -fsSL https://github.com/yamataka22/pitboard-cli/releases/download/v0.1.1/pitboard_0.1.1_darwin_arm64.tar.gz | tar xz pitboard && sudo mv pitboard /usr/local/bin/
 ```
 
 URL のファイル名は環境に合わせて読み替えてください。
 
 | 環境 | ファイル |
 | --- | --- |
-| macOS（Apple Silicon） | `pitboard_0.1.0_darwin_arm64.tar.gz` |
-| macOS（Intel） | `pitboard_0.1.0_darwin_amd64.tar.gz` |
-| Linux（x86_64） | `pitboard_0.1.0_linux_amd64.tar.gz` |
-| Linux（arm64） | `pitboard_0.1.0_linux_arm64.tar.gz` |
+| macOS（Apple Silicon） | `pitboard_0.1.1_darwin_arm64.tar.gz` |
+| macOS（Intel） | `pitboard_0.1.1_darwin_amd64.tar.gz` |
+| Linux（x86_64） | `pitboard_0.1.1_linux_amd64.tar.gz` |
+| Linux（arm64） | `pitboard_0.1.1_linux_arm64.tar.gz` |
 
 [Releases](https://github.com/yamataka22/pitboard-cli/releases) からブラウザでダウンロードした場合は、展開した `pitboard` を `/usr/local/bin` に置きます。macOS では「開発元を検証できません」と出るので、次を実行してください。
 
