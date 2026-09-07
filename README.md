@@ -52,7 +52,11 @@ go install github.com/yamataka22/pitboard-cli/cmd/pitboard@latest
 
 ### Windows
 
-WSL で Claude Code を使っている場合、WSL の中は Linux なので、上の Linux（通常は x86_64）の手順で入れます。
+WSL で Claude Code を使っている場合、WSL の中は Linux なので、WSL のターミナルで次を実行します。
+
+```sh
+curl -fsSL https://github.com/yamataka22/pitboard-cli/releases/download/v0.1.1/pitboard_0.1.1_linux_amd64.tar.gz | tar xz pitboard && sudo mv pitboard /usr/local/bin/
+```
 
 Windows で直接使うための zip も Releases に置いていますが、動作確認はしていません。
 
