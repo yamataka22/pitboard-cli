@@ -33,6 +33,8 @@ xattr -d com.apple.quarantine /usr/local/bin/pitboard
 
 ### go install
 
+Go が入っていれば、Releases を使わずにこれで入ります。
+
 ```sh
 go install github.com/yamataka22/pitboard-cli/cmd/pitboard@latest
 ```
@@ -43,8 +45,8 @@ zip を Releases に置いていますが、動作確認はしていません。
 
 ## セットアップ
 
-1. pitboard の Web で **プロフィール > アクセストークン** を開き、トークンを発行する（`pb_` で始まる。一度だけ表示）。AI に渡すなら「読み取り専用」で十分です
-2. ログインする。所属スペースが1つならそれが既定になります
+1. pitboard の Web で **プロフィール > アクセストークン** を開き、トークンを発行する（`pb_` で始まる。一度だけ表示）。AI に渡すなら「読み取り専用」で十分です（[トークンについて](docs/configuration.md#トークンについて)）
+2. ログインする。所属スペースが1つならそれが既定になります（[スペースの決まり方](docs/configuration.md#スペースの決まり方)）
 
    ```sh
    pitboard auth login          # プロンプトでトークンを貼り付ける
@@ -67,8 +69,11 @@ zip を Releases に置いていますが、動作確認はしていません。
 
 ```
 自分が担当のタスクのうち、8/31〜9/4 にリリース完了になったものの番号とタイトルを教えて
+
 進行中で1週間以上動いていないタスクは？
+
 担当が決まっていないタスクを一覧して
+
 #42 の内容を要約して
 ```
 
@@ -76,7 +81,9 @@ zip を Releases に置いていますが、動作確認はしていません。
 
 ```
 「週報を書く」を自分の担当で着手中に作って
+
 #42 を鈴木さんの担当にして、リリース待ちに動かして
+
 #42 に「レビューお願いします」と鈴木さん宛にコメントして
 ```
 
@@ -87,10 +94,10 @@ pitboard task list --mine --progress リリース完了 --progress-changed-since
 ```
 
 - AI が pitboard を使わないときは「pitboard で」と添えるか、`/pitboard` とスキル名を明示します
-- 「完了」に当たるカラムが複数あるスペースでは、カラム名を指定して頼むと確実です
+- 「完了」に当たるカラムが複数あるスペースでは、カラム名を指定して頼むと確実です（[進捗カラムと state](docs/concepts.md#進捗カラムと-state)）
 - 書き込みコマンドは `--yes` が無いと実行されません。SKILL.md は AI に「書く前に意図を確認する」「二重作成を避ける」と指示しています。読み取り専用トークンを渡しておけば、書き込みは API 側で拒否されます
 
-定型の依頼をコマンドにする方法、cron から定期実行する方法は [AI エージェントと使う](docs/ai.md) にあります。
+定型の依頼を[個人コマンドにする方法](docs/ai.md#個人コマンドとして保存する)と、[cron から定期実行する方法](docs/ai.md#定期的に動かす)は別にまとめています。
 
 ## コマンドを直接使う
 
@@ -105,7 +112,7 @@ pitboard comment add 42 --body "レビューお願いします" --mention 鈴木
 pitboard task list --json --fields number,name,state         # JSON（パイプ時は自動）
 ```
 
-日付は ISO 8601（`2026-09-01`）で渡します。`7d` や `thisweek` のような相対指定はありません。
+日付は ISO 8601（`2026-09-01`）で渡します。`7d` や `thisweek` のような相対指定はありません。全コマンドとオプションは[コマンドリファレンス](docs/commands/README.md)に、`state` や `progress_changed_at` の意味は [pitboard の語彙](docs/concepts.md)にあります。
 
 ## ドキュメント
 
@@ -120,4 +127,4 @@ pitboard task list --json --fields number,name,state         # JSON（パイプ�
 - **タスクを直接 update する口はありません。** 更新は「担当を変える」「カラムを動かす」のような意図ごとのコマンドだけで、Web の操作と同じ処理を通ります。1タスク1担当、期限日なし、といった制約は API 側で強制されます
 - **書き込みは `--yes` が必須**です。AI が確認なしに書き込むのを防ぎます
 - **日付は AI（またはあなた）が計算して ISO 形式で渡します。** 「今週」「7日前」のような相対指定は CLI にはありません
-- pitboard が公式に対応するのはこの CLI だけです。HTTP API を直接使うのは自己責任です
+- pitboard が公式に対応するのはこの CLI だけです。HTTP API を直接使うのは自己責任です（[API を直接使うことについて](docs/configuration.md#api-を直接使うことについて)）
