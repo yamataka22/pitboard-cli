@@ -29,7 +29,18 @@ make docs        # docs/commands/ を cobra の定義から生成し直す
 
 ## リリース
 
-`v*` タグを push すると GitHub Actions の goreleaser が各 OS 向けのバイナリを GitHub Releases に出します。Homebrew tap は `.goreleaser.yaml` のコメントを外して有効にします。
+`v*` タグを push すると GitHub Actions の goreleaser が各 OS 向けのバイナリを GitHub Releases に出します。
+
+```sh
+make test
+goreleaser check                       # 設定と deprecation の確認
+goreleaser release --snapshot --clean  # 任意。dist/ に出るだけで push しない
+git tag -a v0.1.0 -m "v0.1.0" && git push origin v0.1.0
+```
+
+タグと Release の消し直しは事故りやすいので、失敗したらパッチバージョンを上げて出し直します。
+
+配布は当面 Releases のアーカイブと `go install` だけです。Homebrew tap（`brew install --cask yamataka22/tap/pitboard`）は `.goreleaser.yaml` の `homebrew_casks` のコメントを外すと有効になりますが、その前に yamataka22/homebrew-tap を作り、そこへ commit するための PAT を Actions secrets（`HOMEBREW_TAP_TOKEN`）に登録して `release.yml` の env に渡す必要があります。goreleaser 2 系では `brews`（formula）は deprecated なので cask を使います。
 
 ## 構成
 

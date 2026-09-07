@@ -147,7 +147,7 @@ func versionCheck(cliVersion string, v client.Versions) check {
 		return check{"version", true, info, ""}
 	}
 	if compareSemver(cur, min) < 0 {
-		return check{"version", false, info + " — this CLI is too old", "Upgrade: brew upgrade pitboard (or download the latest release)"}
+		return check{"version", false, info + " — this CLI is too old", "Upgrade: get the latest release at https://github.com/yamataka22/pitboard-cli/releases"}
 	}
 	return check{"version", true, info, ""}
 }

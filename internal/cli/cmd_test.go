@@ -333,7 +333,7 @@ func TestDoctorVersionCheck(t *testing.T) {
 func TestOutdatedCLIExitCode(t *testing.T) {
 	api, _ := newFakeAPI(t)
 	writeConfig(t, map[string]any{"token": "pb_test"})
-	api.fail("/spaces", 426, "cli_outdated", "pitboard-cli 0.1.0 is too old (minimum: 0.2.0).", "Upgrade: brew upgrade pitboard")
+	api.fail("/spaces", 426, "cli_outdated", "pitboard-cli 0.1.0 is too old (minimum: 0.2.0).", "Upgrade: get the latest release")
 	env, _, code := run(t, "space", "list")
 	if code != 5 || env["error"] != "cli_outdated" {
 		t.Fatalf("code=%d env=%v", code, env)

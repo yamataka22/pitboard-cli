@@ -21,6 +21,7 @@ archives:
         formats: [zip]
     files:
       - README.md
+      - LICENSE
 
 checksum:
   name_template: checksums.txt
@@ -29,13 +30,23 @@ changelog:
   use: github
   sort: asc
 
-# Homebrew tap。公開時に yamataka22/homebrew-tap リポジトリを作ってから有効にする
-# brews:
-#   - repository:
+# Homebrew tap。まずは Releases のみで配布するため無効。
+# 有効にするときは yamataka22/homebrew-tap（public）を作り、そこへ commit するための
+# PAT を pitboard-cli の Actions secrets に HOMEBREW_TAP_TOKEN として登録してから
+# コメントを外す（release.yml の env にも渡す）。goreleaser 2 系では brews は
+# deprecated なので cask を使う
+# homebrew_casks:
+#   - name: pitboard
+#     repository:
 #       owner: yamataka22
 #       name: homebrew-tap
+#       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
 #     homepage: https://pitboard.dev
 #     description: pitboard CLI for humans and AI agents
-#     license: MIT
-#     test: |
-#       system "#{bin}/pitboard version"
+#     license: mit
+#     hooks:
+#       post:
+#         install: |
+#           if system_command("/usr/bin/xattr", args: ["-h"]).exit_status == 0
+#             system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/pitboard"]
+#           end
