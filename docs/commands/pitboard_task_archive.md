@@ -1,9 +1,9 @@
 ## pitboard task archive
 
-タスクをアーカイブする（--undo で解除）
+タスクをアーカイブする（解除は task unarchive）
 
 ```
-pitboard task archive NUMBER [--undo] --yes [flags]
+pitboard task archive NUMBER --yes [flags]
 ```
 
 ### Options
@@ -11,7 +11,6 @@ pitboard task archive NUMBER [--undo] --yes [flags]
 ```
   -h, --help           help for archive
       --space string   スペース ID（省略時は既定スペース）
-      --undo           アーカイブを解除する
       --yes            書き込みを確認したことを示す（必須）
 ```
 

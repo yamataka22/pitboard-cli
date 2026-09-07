@@ -11,18 +11,20 @@ CLI は `pitboard space use ID` で保存した既定スペースを使います
 
 ## 進捗カラムと state
 
-進捗カラム（progress）はスペースごとにユーザーが定義します。名前はスペースによって違い、`done` カテゴリのカラムは**複数あることがあります**（例: 「リリース待ち」と「リリース完了」の両方が done）。
+進捗カラム（progress）はスペースごとにユーザーが定義します。名前はスペースによって違うので、`pitboard space show` で確認し、絞り込みは `--progress <カラム名または ID>` で行うのが基本です。
 
-`state` は pitboard が導出する4値です。
+`state` は進捗カラムと担当者から pitboard が導出する4値で、カラム名を知らなくても使える大まかな区分です。
 
 | state | 条件 |
 |---|---|
-| `backlog` | 進捗カラムに置かれておらず、担当者もいない |
+| `backlog` | 進捗カラムに置かれておらず、担当者もいない。`--state backlog` は `--kind` を省略すると task だけを返す（下の kind を参照） |
 | `inbox` | 進捗カラムに置かれておらず、担当者はいる |
-| `in_progress` | done カテゴリ以外の進捗カラムに置かれている。担当者の有無は問わない |
-| `done` | done カテゴリの進捗カラムに置かれている |
+| `in_progress` | done 扱いでない進捗カラムに置かれている。担当者の有無は問わない |
+| `done` | done 扱いの進捗カラムに置かれている |
 
-「完了」の意味が人によって違う場合（エンジニアはリリース待ちで完了、マネージャーはリリース完了で完了）は、`--state done` ではなく `--progress ID` で特定のカラムを指定してください。
+Web のアサインボードとの対応: 左端の「担当未定」列が `backlog`（進捗ありの担当なしタスクも入る点だけ違う）、各メンバー列の「インボックス」が `inbox`、「進行中」が `in_progress` です。
+
+done 扱いのカラムはスペースの設定で決まり、複数あることがあります（例: 「リリース待ち」と「リリース完了」の両方が done）。`--state done` はそれらをまとめて指す省略形なので、どのカラムかを区別したいときは `--progress` で指定してください。`space show` の `(done)` 印でどのカラムが done 扱いかが分かります。
 
 ## progress_changed_at
 
@@ -33,13 +35,13 @@ CLI は `pitboard space use ID` で保存した既定スペースを使います
 - done カラム間の移動（リリース待ち → リリース完了）でも上書きされます
 - 履歴が無い古いタスクは `null` です
 
-「今週完了」は `--state done --progress-changed-since <週の始まり>` で取ります。「詰まっているタスク」は `--state in_progress` で取って `progress_changed_at` が古いものを見ます。
+「今週リリース完了に入ったタスク」は `--progress リリース完了 --progress-changed-since <週の始まり>` で取ります。「詰まっているタスク」は `--state in_progress` で取って `progress_changed_at` が古いものを見ます。
 
-`--progress-changed-since` / `--until` を付けると、アーカイブ済みも含まれます。完了したタスクはアーカイブされることが多いためです。除きたければ `--archived false` を付けます。
+`--progress-changed-since` / `--until` を付けると、アーカイブ済みも含まれます。終わったタスクはアーカイブされることが多いためです。除きたければ `--archived none` を付けます。
 
 ## アーカイブ
 
-`archived` は `state` とは独立した真偽値です。アーカイブしても `state` と `progress_changed_at` は残ります。既定の一覧はアーカイブ済みを除外します（`--archived true` / `all` で含める）。
+`archived` は `state` とは独立した真偽値です。アーカイブしても `state` と `progress_changed_at` は残ります。既定の一覧はアーカイブ済みを除外します。アーカイブ済みだけなら `--archived only`、両方なら `--archived all` です。
 
 アーカイブ済みのタスクを `task move` で動かすと、アーカイブは解除されます（Web と同じ挙動）。
 
@@ -55,8 +57,9 @@ CLI は `pitboard space use ID` で保存した既定スペースを使います
 
 ## kind
 
-`confirmed`（タスク）と `issue`（未確定の課題）の2種類です。ボード画面はタスクだけを表示し、タスク一覧画面は両方を表示します。
-`task list` は指定が無ければ両方を返します。ボード相当にしたければ `--kind confirmed` を付けます。`task create` の既定は `confirmed` です。
+`task`（タスク）と `issue`（未確定の課題）の2種類で、Web の表示「タスク」「イシュー」と同じ言葉です。ボード画面はタスクだけを表示し、タスク一覧画面は両方を表示します。
+`task list` は指定が無ければ両方を返します。ボード相当にしたければ `--kind task` を付けます。`task create` の既定は `task` です。
+例外は `--state backlog` で、issue は「これから着手するタスク」ではないので `--kind` を省略すると task だけを返します。issue も含めるなら `--kind all`、issue だけなら `--kind issue` を明示してください。
 
 ## 担当者・報告者・メンバー ID
 

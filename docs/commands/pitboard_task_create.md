@@ -1,6 +1,6 @@
 ## pitboard task create
 
-タスクを作成する（報告者は自分、kind の既定は confirmed）
+タスクを作成する（報告者は自分、kind の既定は task）
 
 ### Synopsis
 
@@ -8,16 +8,16 @@
 --document FILE はファイルから本文（markdown）を読む。--document - なら標準入力から読む。
 
 ```
-pitboard task create --name NAME [--assignee ID|me] [--progress ID] ... --yes [flags]
+pitboard task create --name NAME [--assignee ID|NAME|me] [--progress ID|NAME] ... --yes [flags]
 ```
 
 ### Options
 
 ```
-      --assignee string   メンバー ID | me
+      --assignee string   メンバー ID または名前 | me
       --document string   本文（markdown）。ファイルパスか、- で標準入力
   -h, --help              help for create
-      --kind string       confirmed（既定）| issue
+      --kind string       task（既定）| issue
       --label strings     ラベル ID（繰り返し指定可）
       --name string       タスク名（必須）
       --point string      h1 | h4 | d1 .. d5

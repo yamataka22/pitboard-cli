@@ -21,8 +21,9 @@ func newTaskCreateCmd(a *app) *cobra.Command {
 		yes                                                             bool
 	)
 	cmd := &cobra.Command{
-		Use:   "create --name NAME [--assignee ID|me] [--progress ID] ... --yes",
-		Short: "タスクを作成する（報告者は自分、kind の既定は confirmed）",
+		Use:   "create --name NAME [--assignee ID|NAME|me] [--progress ID|NAME] ... --yes",
+		Short: "タスクを作成する（報告者は自分、kind の既定は task）",
+		Args:  cobra.NoArgs, // 引用符なしの "$VAR" が空白で割れたときに黙って捨てない
 		Long: `タスクを作成する。作成時に決められることは1回で受け付ける。
 --document FILE はファイルから本文（markdown）を読む。--document - なら標準入力から読む。`,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -63,11 +64,11 @@ func newTaskCreateCmd(a *app) *cobra.Command {
 	fl.StringVar(&space, "space", "", "スペース ID（省略時は既定スペース）")
 	fl.StringVar(&name, "name", "", "タスク名（必須）")
 	fl.StringVar(&document, "document", "", "本文（markdown）。ファイルパスか、- で標準入力")
-	fl.StringVar(&kind, "kind", "", "confirmed（既定）| issue")
+	fl.StringVar(&kind, "kind", "", "task（既定）| issue")
 	fl.StringVar(&project, "project", "", "プロジェクト ID")
 	fl.StringVar(&point, "point", "", "h1 | h4 | d1 .. d5")
 	fl.StringSliceVar(&labels, "label", nil, "ラベル ID（繰り返し指定可）")
-	fl.StringVar(&assignee, "assignee", "", "メンバー ID | me")
+	fl.StringVar(&assignee, "assignee", "", "メンバー ID または名前 | me")
 	fl.StringVar(&progress, "progress", "", "進捗カラム ID（そのカラムに置いた状態で作る）")
 	fl.BoolVar(&yes, "yes", false, "書き込みを確認したことを示す（必須）")
 	return cmd
@@ -77,7 +78,7 @@ func newTaskAssignCmd(a *app) *cobra.Command {
 	var space, to string
 	var yes bool
 	cmd := &cobra.Command{
-		Use:   "assign NUMBER --to ID|me|none --yes",
+		Use:   "assign NUMBER --to ID|NAME|me|none --yes",
 		Short: "担当者を変更する（1タスク1担当）",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -99,7 +100,7 @@ func newTaskAssignCmd(a *app) *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&space, "space", "", "スペース ID（省略時は既定スペース）")
-	cmd.Flags().StringVar(&to, "to", "", "メンバー ID | me | none")
+	cmd.Flags().StringVar(&to, "to", "", "メンバー ID または名前 | me | none")
 	cmd.Flags().BoolVar(&yes, "yes", false, "書き込みを確認したことを示す（必須）")
 	return cmd
 }
@@ -108,7 +109,7 @@ func newTaskMoveCmd(a *app) *cobra.Command {
 	var space, to string
 	var yes bool
 	cmd := &cobra.Command{
-		Use:   "move NUMBER --to PROGRESS_ID|none --yes",
+		Use:   "move NUMBER --to PROGRESS_ID|NAME|none --yes",
 		Short: "進捗カラムへ移動する（none で進捗なしへ。アーカイブ済みは解除される）",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -130,7 +131,7 @@ func newTaskMoveCmd(a *app) *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&space, "space", "", "スペース ID（省略時は既定スペース）")
-	cmd.Flags().StringVar(&to, "to", "", "進捗カラム ID | none")
+	cmd.Flags().StringVar(&to, "to", "", "進捗カラム ID または名前 | none")
 	cmd.Flags().BoolVar(&yes, "yes", false, "書き込みを確認したことを示す（必須）")
 	return cmd
 }
@@ -167,14 +168,23 @@ func newTaskPointCmd(a *app) *cobra.Command {
 }
 
 func newTaskArchiveCmd(a *app) *cobra.Command {
+	return newArchiveToggleCmd(a, "archive", "タスクをアーカイブする（解除は task unarchive）", "archive the task", false)
+}
+
+func newTaskUnarchiveCmd(a *app) *cobra.Command {
+	return newArchiveToggleCmd(a, "unarchive", "アーカイブを解除する（タスクは元の担当・進捗カラムに戻る）", "unarchive the task", true)
+}
+
+// archive / unarchive は同じパスへの POST / DELETE
+func newArchiveToggleCmd(a *app, name, short, action string, unarchive bool) *cobra.Command {
 	var space string
-	var undo, yes bool
+	var yes bool
 	cmd := &cobra.Command{
-		Use:   "archive NUMBER [--undo] --yes",
-		Short: "タスクをアーカイブする（--undo で解除）",
+		Use:   name + " NUMBER --yes",
+		Short: short,
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := requireYes(yes, "archive the task"); err != nil {
+			if err := requireYes(yes, action); err != nil {
 				return err
 			}
 			spaceID, err := a.resolveSpaceID(space)
@@ -183,7 +193,7 @@ func newTaskArchiveCmd(a *app) *cobra.Command {
 			}
 			path := "/spaces/" + spaceID + "/tasks/" + args[0] + "/archive"
 			var env client.Envelope
-			if undo {
+			if unarchive {
 				env, err = a.delete(path)
 			} else {
 				env, err = a.post(path, map[string]any{})
@@ -195,7 +205,6 @@ func newTaskArchiveCmd(a *app) *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&space, "space", "", "スペース ID（省略時は既定スペース）")
-	cmd.Flags().BoolVar(&undo, "undo", false, "アーカイブを解除する")
 	cmd.Flags().BoolVar(&yes, "yes", false, "書き込みを確認したことを示す（必須）")
 	return cmd
 }

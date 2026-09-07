@@ -11,7 +11,7 @@ func taskRow(number int, name, state string) map[string]any {
 	return map[string]any{
 		"number": number, "id": number * 10, "name": name, "state": state,
 		"progress": map[string]any{"id": 7, "name": "作業中", "done": false},
-		"kind":     "confirmed", "point": "d2", "point_days": 2.0,
+		"kind":     "task", "point": "d2", "point_days": 2.0,
 		"assignee": map[string]any{"id": 5, "name": "山田"}, "owner": map[string]any{"id": 5, "name": "山田"},
 		"project": nil, "labels": []any{}, "archived": false, "progress_changed_at": "2026-09-01T10:00:00+09:00",
 		"todo_count": 1, "todo_done_count": 0, "created_at": "2026-09-01T09:00:00+09:00", "updated_at": "2026-09-01T09:00:00+09:00",

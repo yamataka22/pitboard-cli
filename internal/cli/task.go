@@ -14,7 +14,7 @@ import (
 
 func newTaskCmd(a *app) *cobra.Command {
 	cmd := &cobra.Command{Use: "task", Short: "タスク（list / show / create / assign / move / point / archive）"}
-	cmd.AddCommand(newTaskListCmd(a), newTaskShowCmd(a), newTaskCreateCmd(a), newTaskAssignCmd(a), newTaskMoveCmd(a), newTaskPointCmd(a), newTaskArchiveCmd(a))
+	cmd.AddCommand(newTaskListCmd(a), newTaskShowCmd(a), newTaskCreateCmd(a), newTaskAssignCmd(a), newTaskMoveCmd(a), newTaskPointCmd(a), newTaskArchiveCmd(a), newTaskUnarchiveCmd(a))
 	return cmd
 }
 
@@ -68,8 +68,9 @@ func newTaskListCmd(a *app) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "タスクの一覧（既定: アーカイブ除外、番号の降順）",
+		Args:  cobra.NoArgs,
 		Long: `スペースのタスクを一覧する。日付は ISO 8601（2026-09-01）で渡す。"7d" や "thisweek" のような相対指定は無い。
---progress-changed-since / --until を付けるとアーカイブ済みも含まれる（除くなら --archived false）。`,
+--progress-changed-since / --until を付けるとアーカイブ済みも含まれる（除くなら --archived none）。`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			spaceID, err := a.resolveSpaceID(f.space)
 			if err != nil {
@@ -103,15 +104,15 @@ func newTaskListCmd(a *app) *cobra.Command {
 	fl := cmd.Flags()
 	fl.StringVar(&f.space, "space", "", "スペース ID（省略時は既定スペース）")
 	fl.StringVar(&f.state, "state", "", "backlog | inbox | in_progress | done（カンマ区切りで複数）")
-	fl.StringVar(&f.progress, "progress", "", "進捗カラム ID")
-	fl.StringVar(&f.assignee, "assignee", "", "メンバー ID | me | none")
+	fl.StringVar(&f.progress, "progress", "", "進捗カラム ID または名前")
+	fl.StringVar(&f.assignee, "assignee", "", "メンバー ID または名前 | me | none")
 	fl.BoolVar(&f.mine, "mine", false, "--assignee me の別名")
-	fl.StringVar(&f.owner, "owner", "", "メンバー ID | me")
-	fl.StringVar(&f.project, "project", "", "プロジェクト ID | none")
-	fl.StringSliceVar(&f.labels, "label", nil, "ラベル ID（繰り返し指定で AND）")
+	fl.StringVar(&f.owner, "owner", "", "メンバー ID または名前 | me")
+	fl.StringVar(&f.project, "project", "", "プロジェクト ID または名前 | none")
+	fl.StringSliceVar(&f.labels, "label", nil, "ラベル ID または名前（繰り返し指定で AND）")
 	fl.StringVar(&f.point, "point", "", "h1 | h4 | d1 .. d5 | none")
-	fl.StringVar(&f.kind, "kind", "", "confirmed | issue（省略時は両方）")
-	fl.StringVar(&f.archived, "archived", "", "false | true | all（既定 false。--progress-changed-* 指定時は all）")
+	fl.StringVar(&f.kind, "kind", "", "task | issue | all（省略時は両方。ただし --state backlog は task だけ）")
+	fl.StringVar(&f.archived, "archived", "", "none（アーカイブ済みを除く）| only（アーカイブ済みだけ）| all（既定 none。--progress-changed-* 指定時は all）")
 	fl.StringVar(&f.since, "progress-changed-since", "", "今のカラムに置かれた日時がこれ以降（ISO 8601）")
 	fl.StringVar(&f.until, "progress-changed-until", "", "今のカラムに置かれた日時がこれ以前（ISO 8601。日付だけならその日の終わりまで）")
 	fl.StringVarP(&f.query, "query", "q", "", "番号・タスク名・本文を検索")

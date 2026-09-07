@@ -3,7 +3,7 @@
 担当者を変更する（1タスク1担当）
 
 ```
-pitboard task assign NUMBER --to ID|me|none --yes [flags]
+pitboard task assign NUMBER --to ID|NAME|me|none --yes [flags]
 ```
 
 ### Options
@@ -11,7 +11,7 @@ pitboard task assign NUMBER --to ID|me|none --yes [flags]
 ```
   -h, --help           help for assign
       --space string   スペース ID（省略時は既定スペース）
-      --to string      メンバー ID | me | none
+      --to string      メンバー ID または名前 | me | none
       --yes            書き込みを確認したことを示す（必須）
 ```
 

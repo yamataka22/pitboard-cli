@@ -37,6 +37,7 @@ func TestTaskWritesRequireYes(t *testing.T) {
 		{"task", "move", "1", "--to", "9"},
 		{"task", "point", "1", "--to", "d1"},
 		{"task", "archive", "1"},
+		{"task", "unarchive", "1"},
 	} {
 		env, _, code := run(t, args...)
 		if code != 1 || env["error"] != "confirmation_required" {
@@ -98,7 +99,7 @@ func TestTaskAssignMovePointArchive(t *testing.T) {
 	if _, _, code := run(t, "task", "archive", "42", "--yes"); code != 0 || archive.method != "POST" {
 		t.Fatalf("archive: code=%d %v", code, archive)
 	}
-	if _, _, code := run(t, "task", "archive", "42", "--undo", "--yes"); code != 0 || archive.method != "DELETE" {
+	if _, _, code := run(t, "task", "unarchive", "42", "--yes"); code != 0 || archive.method != "DELETE" {
 		t.Fatalf("unarchive: code=%d %v", code, archive)
 	}
 }

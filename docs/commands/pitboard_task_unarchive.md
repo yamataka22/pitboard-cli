@@ -1,17 +1,16 @@
-## pitboard task move
+## pitboard task unarchive
 
-進捗カラムへ移動する（none で進捗なしへ。アーカイブ済みは解除される）
+アーカイブを解除する（タスクは元の担当・進捗カラムに戻る）
 
 ```
-pitboard task move NUMBER --to PROGRESS_ID|NAME|none --yes [flags]
+pitboard task unarchive NUMBER --yes [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help           help for move
+  -h, --help           help for unarchive
       --space string   スペース ID（省略時は既定スペース）
-      --to string      進捗カラム ID または名前 | none
       --yes            書き込みを確認したことを示す（必須）
 ```
 

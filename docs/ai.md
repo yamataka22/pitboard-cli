@@ -1,6 +1,6 @@
 # AI エージェントと使う
 
-pitboard 側に「今週完了したタスクをまとめる」のような機能はありません。材料（フィルタとフィールド）だけを CLI が提供し、組み合わせはユーザーと AI に任せています。
+CLI はフィルタとフィールドを提供し、それをどう組み合わせるかは AI（とユーザー）が決めます。
 
 ## 仕組み
 
@@ -15,28 +15,30 @@ Codex は `pitboard skill install --target codex` が表示する1行を `AGENTS
 ## 頼み方の例
 
 ```
-自分が担当のタスクのうち、8/31〜9/4 に完了になったものの番号とタイトルを教えて
+自分が担当のタスクのうち、8/31〜9/4 にリリース完了になったものの番号とタイトルを教えて
 ```
 
-AI はこう組み立てます。
+AI は `space show` でカラム名を確認してからこう組み立てます。
 
 ```sh
-pitboard task list --mine --state done \
+pitboard task list --mine --progress リリース完了 \
   --progress-changed-since 2026-08-31 --progress-changed-until 2026-09-04 \
   --json --fields number,name
 ```
+
+「完了になったもの」とだけ言われた場合、done 扱いのカラムが複数あるスペースでは AI がどのカラムか確認するか、`--state done` でまとめて取ります。
 
 他の例:
 
 - 「進行中で1週間以上動いていないタスクは？」→ `--state in_progress` で取り、`progress_changed_at` が古いものを挙げる
 - 「担当が決まっていないタスクを一覧して」→ `--state backlog`
 - 「#42 の内容を要約して」→ `task show 42`
-- 「『週報を書く』を自分の担当で着手中に作って」→ `space show` で着手中の ID を確認し、`task create --name "週報を書く" --assignee me --progress 7 --yes`
-- 「#42 に『レビューお願いします』と鈴木さん宛にコメントして」→ `space show` で鈴木さんの ID を確認し、`comment add 42 --body "レビューお願いします" --mention 13 --yes`
+- 「『週報を書く』を自分の担当で着手中に作って」→ `space show` で着手中カラムの名前を確認し、`task create --name "週報を書く" --assignee me --progress 着手中 --yes`（ID でもよい）
+- 「#42 に『レビューお願いします』と鈴木さん宛にコメントして」→ `comment add 42 --body "レビューお願いします" --mention 鈴木 --yes`（同名が複数いれば `space show` で ID を確認して指定）
 
 ## 書き込みの安全装置
 
-- 書き込みコマンド（create / assign / move / point / archive / comment add）は `--yes` が無いと実行されません。AI が確認なしに書き込むのを防ぐためです
+- 書き込みコマンド（create / assign / move / point / archive / unarchive / comment add）は `--yes` が無いと実行されません。AI が確認なしに書き込むのを防ぐためです
 - SKILL.md は AI に「書く前にユーザーの意図を確認する」「二重作成を避けるため既存を確認する」と指示しています
 - 読み取り専用トークンを AI に渡しておけば、書き込みは API 側で拒否されます
 
@@ -47,8 +49,8 @@ pitboard task list --mine --state done \
 ```markdown
 <!-- ~/.claude/commands/weekly-done.md -->
 今日の日付から今週の月曜日を求め、
-`pitboard task list --state done --progress-changed-since <月曜日> --json` を実行して、
-担当者ごとに完了タスクをまとめて報告して。
+`pitboard task list --progress リリース完了 --progress-changed-since <月曜日> --json` を実行して、
+担当者ごとにまとめて報告して。
 ```
 
 `~/.claude/skills/pitboard/` は pitboard が配る語彙とルール、`~/.claude/commands/` はユーザー自身の頼み方の定型文、という2層です。前者は `skill install` で上書きされるので編集しないでください。
@@ -58,8 +60,8 @@ pitboard task list --mine --state done \
 内容が決まっているタスクなら AI を挟まず、cron や launchd から CLI を直接呼ぶのが確実です。
 
 ```sh
-# 毎週木曜 9:00 に「週報を書く」を自分の担当・着手中で作る（着手中カラムの id は space show で確認）
-0 9 * * 4 pitboard task create --name "週報を書く" --point h4 --assignee me --progress 7 --yes
+# 毎週木曜 9:00 に「週報を書く」を自分の担当・着手中で作る（カラム名を変えたら壊れるので、固定したいなら space show の id を使う）
+0 9 * * 4 pitboard task create --name "週報を書く" --point h4 --assignee me --progress 着手中 --yes
 ```
 
 二重作成を避けるなら、先に `pitboard task list -q "週報を書く" --progress-changed-since <今週の月曜>` で確認します。

@@ -25,4 +25,5 @@
 - [pitboard task move](pitboard_task_move.md)
 - [pitboard task point](pitboard_task_point.md)
 - [pitboard task show](pitboard_task_show.md)
+- [pitboard task unarchive](pitboard_task_unarchive.md)
 - [pitboard version](pitboard_version.md)

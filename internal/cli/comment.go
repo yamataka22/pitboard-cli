@@ -63,7 +63,7 @@ func newCommentAddCmd(a *app) *cobra.Command {
 	fl.StringVar(&space, "space", "", "スペース ID（省略時は既定スペース）")
 	fl.StringVar(&body, "body", "", "本文（markdown）。- で標準入力")
 	fl.StringVar(&replyTo, "reply-to", "", "返信先のコメント ID")
-	fl.StringSliceVar(&mentions, "mention", nil, "メンションするメンバー ID（繰り返し指定可）")
+	fl.StringSliceVar(&mentions, "mention", nil, "メンションするメンバー ID または名前（繰り返し指定可）")
 	fl.BoolVar(&yes, "yes", false, "書き込みを確認したことを示す（必須）")
 	return cmd
 }

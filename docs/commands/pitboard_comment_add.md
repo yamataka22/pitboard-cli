@@ -17,7 +17,7 @@ pitboard comment add NUMBER --body TEXT|- [--reply-to COMMENT_ID] [--mention ID]
 ```
       --body string       本文（markdown）。- で標準入力
   -h, --help              help for add
-      --mention strings   メンションするメンバー ID（繰り返し指定可）
+      --mention strings   メンションするメンバー ID または名前（繰り返し指定可）
       --reply-to string   返信先のコメント ID
       --space string      スペース ID（省略時は既定スペース）
       --yes               書き込みを確認したことを示す（必須）
