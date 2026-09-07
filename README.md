@@ -52,7 +52,9 @@ go install github.com/yamataka22/pitboard-cli/cmd/pitboard@latest
 
 ### Windows
 
-zip を Releases に置いていますが、動作確認はしていません。
+WSL で Claude Code を使っている場合、WSL の中は Linux なので、上の Linux（通常は x86_64）の手順で入れます。
+
+Windows で直接使うための zip も Releases に置いていますが、動作確認はしていません。
 
 ## セットアップ
 
